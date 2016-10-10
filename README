@@ -1,0 +1,94 @@
+
+InfoWatcher - A log/system monitoring and filter program originally based on swatch2.2 
+(Simple Watcher)
+
+UPDATES
+
+1.11-
+    Condensed the three routines that read from the config file into 1.  Also
+    Found that alarm () does not work correctly for implementing a timeout when 
+    trying to access a hung FS.  Replaced with routine set_timeout which implements
+    a timeout usint SIGINT.  Added another error level to messages.  Also fixed 
+    a couple bugs.
+
+1.10-
+    Added the companion program slm.pl to check processes, hosts,
+    file systems, and FDFs.  The overall set of programs is now called "InfoWatcher".
+
+1.02-
+    Changed Debug 3 to a command line option for Single_Pass.  Fixed an error
+    where messages were not getting mailed correctly. Fixed the mode problem
+    in the install scripts.
+
+1.01- 
+    Fixed the point at which the time stamp is added to the messages.  This
+    was necessitated by the interval modifications.  Added a Debug level 3 to
+    give an admin the ability to make a single pass through all monitored files.
+    Couple minor cleanups.
+
+1.0-
+    Finally fixed the way in which the program handles intervals within
+    skip_message().  Also added in an option to set a minimum # of messages 
+    to be received within an interval before the messages are reported.
+
+0.5-
+    Several bug fixes and minor modifications.
+
+0.4-
+    This is Version 0.4 of slm.  It has been modified to handle dated
+    log files, to do more checking to ensure no messages are missed, and to
+    trim its own log based on receiving a SIGALRM at a specified time, or
+    when the file reaches 500KB.  Also added debugging levels instead of 
+    a simple flag.
+
+0.3-
+    This is Version 0.3 of slm.  It has been modified to run as a daemon
+    process and its main module no longer spawns a second process.  It has 
+    also had several modifications made to the logging and message formats
+    It also contains several documentation fixes.  Special thanks to Sean 
+    Murphy (SRA) and Chris Murphy (RABA Inc.) for their reviews and 
+    suggestions.
+
+0.2- 
+    This is Version 0.2 of slm.  It modularizes the original program
+    and adds several bug fixes and enhancements.
+
+0.1-
+   This is the first version of slm.  It builds on the swatch program
+   to monitor multiple files instead of a single file.
+
+
+HOW TO INSTALL
+	
+    To install InfoWacher simply type "sh install.sh" and you will be prompted for
+    information needed for the installation.
+
+FUTURE PLANS
+
+   Current Plans are to release InfoWatcher 2.0 in April, 2000.  The address will be
+
+   www.protech-eng-svcs.com/download
+
+   This will be a significantly enhanced version of the program with enhanced/secure
+   logging, improved performance, multi-line pattern matching, a real web based
+   inteface (not just a created html page), and numerous other enhancements.
+
+NOTICE
+    The following is the copyright notice from the original swatch program.
+    The InfoWatcher program was originally based on Version 2.2 of swatch but
+    has been extensively modified, and contains fixes to multiple problems found
+    in the original swatch program.
+
+#
+# Created on Wed Aug 12 16:12:13 PDT 1993 by Todd_Atkins@CAST.Stanford.EDU
+#
+# Copyright (1995) The Board of Trustees of the Leland Stanford Junior
+# Univeristy.  Except for commercial resale, lease, license or other commercial
+# transactions, permission is hereby given to use, copy, modify, and distribute
+# this software -- by exercising this permission you agree that this Notice
+# shall accompany this software at all times.
+#
+# STANFORD MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING
+# THIS SOFTWARE.
+#
+

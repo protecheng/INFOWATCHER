@@ -1,0 +1,254 @@
+.\" @(#) InfoWatcher Version 1.11  03/17/1999 Jon Christensen (j.christensen@computer.org) Protech Engineering Services 
+.TH slm 5 "03/17/1999"
+.SH NAME
+slm.config \- configuration file for the log monitor and
+filter portion of the Info Watcher program:  slm(8)
+.SH SYNOPSIS
+.B ~/slm.config
+.SH DESCRIPTION
+This configuration file is used by the 
+.B slm(8)
+program to determine:
+What logfiles to monitor, 
+what types of expressions/patterns to look for, what type
+of action(s) should be taken when a pattern is matched, and
+what message to print to the slm log.
+It contains three main sections seperated by the following
+tags:
+.PP
+.IP
+FILES, 
+FILTERS,
+MESSAGES
+.PP
+The tags should be on a line by themselves at the beginning
+of each section.  Comments and blank lines are allowed anywhere
+in the config file.
+.PP
+The FILES section contains three TAB separated fields:
+.IP
+Filename             Host		LogInfo
+.PP
+The Filename field contains the fully resolved pathname
+of a logfile that needs to be monitored.  The logfile
+needs to be readable by the user running the Monitor
+process.
+.PP
+The
+.B second
+field contains the name of the host associated with the
+monitored logfile.  This information is used when formatting log
+messages to indicate which host (when multiple hosts are being 
+monitored) the messages originated from.
+.PP
+The
+.B third 
+field contains information to better indicate the location
+of the errors from a particular log.
+.PP
+The FILTERS section contains five TAB separated fields:
+.nf
+
+pattern[,pattern]   action[,action]   MSG#   [[[HH:]MM:]SS]  [Count]
+.fi
+.PP
+The first field specifies a pattern(s) to be matched.
+A pattern must be a regular expression which
+.B perl(1)
+will accept.  Patterns are 
+very similar to the regular expressions accepted by
+.B egrep(1).
+Multiple patterns may be specified by using a "," 
+seperated list.
+If desired the last filter pattern can be used to catch unexpected 
+messages.  The MSG# should be:  LR0000.  This MSG# will cause the
+program to use the original message (along with some formatting 
+info) when performing the defined action(s) instead of a 
+predefined message.
+.PP
+The second field is used to define the action(s) to take
+when the message matches the defined pattern(s).  Multiple 
+actions may be specified by using a "," seperated list.
+The following actions are acceptable:
+.TP 20
+.B log 
+Log the matched line.
+The MSG# specified in the third field will be printed to the log along
+with some formatting information which includes:  Date/Time, System name,
+MSG#, Severity Level, and Host.
+.TP
+.B exec=command
+Execute
+.IR command "."
+The
+.I command
+may contain variables which are substituted with fields from the matched 
+line. A
+.I $N
+will be replaced by the
+.IR Nth " field in the line. A"
+.IR $0 " or"
+.I $*
+will be replaced by the entire line.
+.TP
+.B ignore
+Ignore the matched line.
+.TP
+.B mail[=address:address:...]
+Send
+.IR mail " to"
+.I address(es)
+the same entry that is (or would be) entered in the log (default
+address is the user who is running the program).
+.TP
+.B write[=user:user:...]
+Use
+.B write(1)
+to send matched lines to
+.IR user(s) "."
+.PP
+The
+.B third field is mandatory and contains the MSG# of the message 
+to write to the logfile when the specified pattern is matched.  
+The definition of the message numbering scheme is defined
+in the description of the Messages section below.
+.PP
+The
+.B fourth 
+field (which is optional unless the fifth field is specified) can 
+contain a time interval.
+The time should be in one of three formats:
+.TP 15
+.B SS
+.I -- Just seconds
+.TP
+.B MM:SS
+.I -- Minutes and seconds
+.TP
+.B HH:MM:SS
+.I -- Hours minutes and seconds
+.PP
+If an interval
+is specified and more than one identical line is received,
+.B Monitor
+will not perform the actions specified until the specified time has elapsed.
+If the action that is performed uses the input line then the number of
+lines will be included in the line.
+.PP
+The
+.B fifth
+field (which is optional) can contain a message count.
+The count should be an integer value. 
+.PP
+If a count 
+is specified and more than (count) identical lines are received within
+the specified interval,
+.B Monitor
+will not perform the actions specified until the interval has elapsed.
+If the count is not exceeded during the interval, the count is reset.
+.PP
+The MESSAGES section contains three TAB separated fields:
+.IP
+Message#      Severity       Message Text 
+.PP
+The first field contains a Message #.  The numbering scheme is
+as follows:
+.nf
+
+Message Blocks:
+
+      0000 - 1999-  INFO
+      2000 - 3999-  WARN
+      4000 - 5999-  ERROR
+      6000 - 7999-  SEVERE
+      8000 - 9999-  FATAL
+.fi
+.PP
+The last character of the message number indicates the Severity 
+level of the message.
+The second field is the Severity level of the message.  Severity 
+levels are defined as follows:
+.nf
+
+Message Levels:
+
+     INFO-   Informational messages.  No action required.
+     WARN-   Warning messages.  An abnormal system event 
+             hasoccured but processing recovered.
+     ERROR-  Error messages.  An abnormal system event has 
+             ocurred. Processing in one or more subsystems
+             is continuing in crippled mode.
+     SEVERE- Severe messages.  An abnormal system event has
+             ocurred. Processing in one or more subsystems
+             is halted.
+     FATAL-  Fatal messages. An abnormal system event has 
+             ocurred. Processing in one or more subsystems 
+             has failed.
+.fi
+.PP
+The following messages are already defined within the program: 
+.nf
+     INFO  LR0001  Startup Message
+     INFO  LR0002  Received a SIGHUP.  Restarting.
+     INFO  LR0003  Received a SIGALRM.
+     WARN  LR2001  Received a SIGTERM.  Terminating.
+     ERROR LR4001  Error opening file to monitor.
+     FATAL LR8001  Could not Fork.  Fatal error.
+.PP
+The last field is the Text of the message to be printed to the logfile.
+.PP
+.SH EXAMPLE
+.IP
+.PP
+.B FILES
+.PP
+.B /var/adm/messages		myhost		messages
+.PP
+.B FILTERS
+.PP
+.B /buffer overflow/      log,mail=root   LR4100	01:00
+.PP
+.B MESSAGES
+.PP
+.B LR4100 ERROR   Buffer overflow. Call SA.
+.PP
+In this example a log entry which contains the string "file system full" 
+will be logged and mail message sent to root.  Also, multiple instances of
+the message will not be logged if they appear within a minute of the 
+first one.  Instead the first message will be logged and mailed, and the 
+other messages acted upon after the time interval has expired. 
+.IP
+1998/11/18-21:23:34  INFO  LR0000  myhost/myhost:  messages - buffer overflow. Call SA.  => ** 20 seen in 00:01:00
+.SH SEE ALSO
+.BR slm (8),
+.BR ssm (5),
+.BR ssm (8),
+.BR perl (1),
+.BR egrep (1),
+.SH AUTHOR
+.nf
+	Protech Engineering Services
+		 11/14/1998
+
+.PP
+NOTICE
+The following is the copyright notice from the original 
+swatch program. The InfoWatcher program was originally based 
+on Version 2.2 of swatch but has been extensively modified, 
+and contains fixes to multiple bugs found in the original 
+swatch program.
+
+#
+# Created on Wed Aug 12 16:12:13 PDT 1993 by 
+# Todd_Atkins@CAST.Stanford.EDU
+#
+# Copyright (1995) The Board of Trustees of the Leland 
+# Stanford Junior Univeristy.  Except for commercial resale, 
+# lease, license or other commercial transactions, 
+# permission is hereby given to use, copy, modify, and 
+# distribute this software -- by exercising this permission 
+# you agree that this Notice shall accompany this software 
+# at all times.
+#
+# STANFORD MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY 
+# KIND CONCERNING THIS SOFTWARE.

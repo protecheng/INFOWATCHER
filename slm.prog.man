@@ -1,0 +1,123 @@
+.\" @(#) InfoWatcher Version 1.11  03/17/1999 Jon Christensen (j.christensen@computer.org)  Protech Engineering Services
+.TH slm 8 "03/17/1999"
+.SH NAME
+slm \- log monitoring and filter program 
+.SH SYNOPSIS
+.B slm 
+.RB [ " \-c "
+.IR config_file " ]"
+.RB [ " \-l "
+.IR logfile " ]"
+.RB [ " \-s "
+.IR sleeptime " ] "
+.RB [ " \-P "
+.IR pattern_separator " ]"
+.RB [ " \-A "
+.IR action_separator " ]"
+.RB [ " \-D "
+.IR debug_level " ]"
+.RB [ " \-S "
+.IR Single_Pass " ]"
+.RB [ " \-v "
+.IR version " ]"
+.SH DESCRIPTION
+.B slm 
+is designed to monitor system activity and filter messages based
+on specified filter patterns.
+.B slm
+requires a configuration file which contains
+a listing of logs to monitor, pattern(s)
+to filter on, 
+action(s)
+to perform when each pattern is matched, and a standard message 
+to be used when performing the listed actions.
+.SH OPTIONS
+.TP 15
+.BI \-c " filename"
+Use
+.I filename
+as the configuration file.
+.TP
+.BI \-l " logfile"
+Use 
+.I filename 
+to log messages 
+to.
+.TP
+.BI \-s " sleeptime"
+Tells
+.B Monitor(8)
+how long (in seconds) to wait 
+between each run.
+.TP
+.BI \-P " pattern_separator"
+Tells
+.B Monitor(8)
+to use
+.I pattern_separator
+when parsing the patterns in the configuration file.
+The default is a comma.
+.TP
+.BI \-A " action_separator"
+Tells
+.B Monitor(8)
+to use
+.I action_separator
+when parsing the actions in the configuration file.
+The default is a comma.
+.TP
+.BI \-D " debug"
+Turns on debugging.  This will generate debug messages printed to STDOUT.
+The # and type of messages is determined by the Debug_Level.
+.TP
+.BI \-S " Single Pass"
+Turns on Single Pass mode.  This will check all the monitored logs and
+print out ALL messages that match the filter patterns to STDOUT.  Kind of
+a quick check on system health.
+.TP
+.BI \-v " version"
+Prints the version of the program.
+.PP
+If Monitor is called with no options, it is the same as typing the 
+command line
+.IP
+slm -c ~/slm.config -l ~/logs/slm.log -s 30
+.SH SEE ALSO
+.BR slm (5),
+.BR ssm (8),
+.BR ssm (5),
+.BR signal (3)
+.SH AUTHOR
+.nf
+       Protech Engineering Services
+                 11/14/1998
+
+.PP
+NOTICE
+The following is the copyright notice from the original 
+swatch program. The InfoWatcher program was originally based 
+on Version 2.2 of swatch but has been extensively modified, 
+and contains fixes to multiple bugs found in the original 
+swatch program.
+
+#
+# Created on Wed Aug 12 16:12:13 PDT 1993 by 
+# Todd_Atkins@CAST.Stanford.EDU
+#
+# Copyright (1995) The Board of Trustees of the Leland 
+# Stanford Junior Univeristy.  Except for commercial resale, 
+# lease, license or other commercial transactions, 
+# permission is hereby given to use, copy, modify, and 
+# distribute this software -- by exercising this permission 
+# you agree that this Notice shall accompany this software 
+# at all times.
+#
+# STANFORD MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY 
+# KIND CONCERNING THIS SOFTWARE.
+#
+
+.SH NOTES
+Upon receiving a HUP signal slm will re-read the
+configuration file and restart.
+slm will terminate gracefully
+when it receives a QUIT, TERM, or INT signal.

@@ -1,0 +1,23 @@
+slm.pl: The raw log monitoring program
+
+ssm.pl: A companion program to slm to check process status,
+        hosts, File Systems, and FDFs
+
+slm.config: sample configuration file for slm
+
+ssm.config: sample configuration file for ssm
+
+install.pl: the real installation script (usually executed by install.sh)
+
+install.sh: installation script 
+
+IW_support.pl: General support routine library for InforWatcher
+
+slm.conf.man: the configuration man page
+
+slm.prog.man: the program man page
+
+README: a brief synopsis of the program
+
+CONTENTS:  this file
+

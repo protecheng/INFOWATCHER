@@ -1,0 +1,120 @@
+.\" @(#) InfoWatcher Version 1.11  03/17/1999 Jon Christensen (j.christensen@computer.org) Protech Engineering Services 
+.TH ssm 5 "03/17/1999"
+.SH NAME
+ssm.config \- configuration file for the slm companion
+program:  ssm(8)
+.SH SYNOPSIS
+.B ~/ssm.config
+.SH DESCRIPTION
+This configuration file is used by the 
+.B ssm(8)
+program to determine:
+What processes to monitor, 
+what hosts to monitor,
+what File Systems to Monitor and how large they should be before
+printing a warning message, and
+what FDF systems to check for possible errors and offline disks.
+It contains four main sections seperated by the following
+tags:
+.PP
+.IP
+PROCESSES, 
+HOSTS,
+FS,
+FDF
+.PP
+The tags should be on a line by themselves at the beginning
+of each section.  Comments and blank lines are allowed anywhere
+in the config file.
+.PP
+The PROCESSES section contains two TAB separated fields:
+.IP
+Process             Host
+.PP
+The Process field contains the name of a process 
+that needs to be monitored to ensure it is running.
+.PP
+The
+.B second
+field contains the name of the host associated with the
+monitored process. 
+.PP
+The HOSTS section contains a single field:
+.nf
+
+HostName
+.fi
+.PP
+This field specifies the host to be monitored.  A PING is used
+to determine if the Host is alive or Not.
+.PP
+The FS section contains two TAB separated fields:
+.IP
+FS      Percent 
+.PP
+The first field contains the name of the File System to be monitored.
+.PP
+The second field contains the percentage full at which to print an Error
+message to the System Log. A Warning message is printed to Monitor_Check's
+log if the file system approaches 10% of this number.
+.PP
+The FDF section contains a single field:
+.nf
+
+HostName 
+.fi
+.PP
+This field specifies the FDFSERVERHOST to be monitored.  An "fdf df" and 
+"fdf fdfstat" are used to determine if there are any problems.
+.PP
+.PP
+.SH EXAMPLE
+.IP
+.PP
+.B PROCESSES 
+.PP
+.B loader		myhost
+.PP
+.B HOSTS 
+.PP
+.B myhost 
+.PP
+.B FS 
+.PP
+.B /			70 
+.PP
+.B FDF 
+.PP
+.B myhost 
+.PP
+.SH SEE ALSO
+.BR slm (8),
+.BR ssm (8),
+.BR perl (1),
+.BR egrep (1),
+.SH AUTHOR
+.nf
+	Protech Engineering Services
+		 03/11/1999
+
+.PP
+NOTICE
+The following is the copyright notice from the original 
+swatch program. The InfoWatcher program was originally based 
+on Version 2.2 of swatch but has been extensively modified, 
+and contains fixes to multiple bugs found in the original 
+swatch program.
+
+# Created on Wed Aug 12 16:12:13 PDT 1993 by 
+# Todd_Atkins@CAST.Stanford.EDU
+#
+# Copyright (1995) The Board of Trustees of the Leland 
+# Stanford Junior Univeristy.  Except for commercial resale, 
+# lease, license or other commercial transactions, 
+# permission is hereby given to use, copy, modify, and 
+# distribute this software -- by exercising this permission 
+# you agree that this Notice shall accompany this software 
+# at all times.
+#
+# STANFORD MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY 
+# KIND CONCERNING THIS SOFTWARE.
